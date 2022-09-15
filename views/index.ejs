@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="FoxTeaHouse - Admin Panel">
+
+    <title>Document</title>
+
+    <link rel="stylesheet" href="css/bootstrap.css">
+
+    <script src="js/bootstrap.bundle.js"></script>
+    <script src="https://kit.fontawesome.com/50dad09a73.js" crossorigin="anonymous"></script>
+
+
+    <style>
+        .main_container{
+            max-width: 100vw;
+            min-height: 100vh;
+            padding: 10vh 6vw;
+            background-color: grey;
+
+        }
+    </style>
+</head>
+
+<!--
+asset tag location component explained:
+'55.969656:n3.164780-PC-01' -> 55.969656:n3.164780 = location
+
+location is made up of 2 values that are separate with ':'. They indicate longitude and latitute in format used by google maps. 
+Since those value can be negative (to distinguish west from east and north from south), the minus sign should be converted to letter 'n'. 
+This will preserve the format of asset tag that is made up of 3 components and which are divided with '-' dash sign (location-deviceType-ID).
+-->
+
+<body>
+<div class="container-fluid main_container">
+
+    <h1>Device Asset Register</h1>
+    <h2>Add New</h2>
+
+    <!--Change colour of the 'add new' table to other, like white? In order to distinguish to separate tables?-->
+       
+    <div class="table-responsive">
+        <table class="table table-dark table-striped">
+            <thead>
+                <tr>
+                    <th scope="col" style="width:2vw;"></th>
+                    <th scope="col" class="text-center" style="width:22vw;">Asset Tag <br>(Location-Device Type-ID)</th>
+                    <th scope="col" style="width:14vw;">Assigned To</th>
+                    <th scope="col" style="width:8vw;">Date Bought</th>
+                    <th scope="col" style="width:8vw;">Date Decommissioned</th>
+                    <th scope="col" style="width:10vw;">Device Type</th>
+                    <th scope="col" style="width:10vw;">Operating System</th>
+                    <th scope="col" style="width:12vw;"></th>
+                </tr>
+            </thead>
+            
+            <tbody>
+                <tr>
+                    <form class="validate" id="assign_form" action="/" method="POST">
+                    <!--First column (the '#' column) is left blank to preserve UI consistency-->
+                    <th scope="row"></th>
+            
+                    <td>    
+                        <div class="input-group mb-3">
+                            <input type="text" name="tagLocation" class="form-control" placeholder="Location" aria-label="Location" form="assign_form" required>
+                                <span class="input-group-text">-</span>
+                            <input type="text" name="tagDeviceType" class="form-control" placeholder="Device Type" aria-label="Device Type" form="assign_form" required>
+                                <span class="input-group-text">-</span>
+                            <input type="text" name="tagID" class="form-control" placeholder="ID" aria-label="ID" form="assign_form" required>
+                        </div>
+                    </td>
+                         
+                    <td>  
+                    <% if(formSelectData.personSelect.length != 0){  %>
+                        <select name="person" class="form-select" aria-label="Assign to person" form="assign_form" required>
+                            <option value="placeholder" hidden>Select Person</option>
+                    <%  formSelectData.personSelect.forEach(element => {  %>
+                            <option value="<%= element.personID%>"><%= element.full_name %></option>
+                    <% }) %>
+                        </select>
+                    <% } %>
+                    </td>
+            
+                    <td>
+                        <input name="dateBought" type="date" class="form-control" value="" form="assign_form" required>
+                    </td>
+                    <td>
+                        <input name="dateDecommissioned" type="date" class="form-control" value="" form="assign_form">
+                    </td>
+            
+                    <td>  
+                    <% if(formSelectData.deviceTypeSelect.length != 0){  %>
+                        <select name="deviceType" class="form-select" aria-label="Device Type" form="assign_form" required>
+                            <option value="placeholder" hidden>Select Device</option>
+                    <%  formSelectData.deviceTypeSelect.forEach(element => {  %>
+                            <option value="<%= element.deviceID%>"><%= element.device_type %></option>
+                    <% }) %>
+                        </select>
+                    <% } %>  
+                    </td>
+            
+                    <td>    
+                    <% if(formSelectData.osTypeSelect.length != 0){  %>
+                        <select name="osType" class="form-select" aria-label="Operating System" form="assign_form" required>
+                            <option value="placeholder" hidden>Select System</option>
+                    <%  formSelectData.osTypeSelect.forEach(element => {  %>
+                            <option value="<%= element.osID%>"><%= element.os_type %></option>
+                    <% }) %>
+                        </select>
+                    <% } %>  
+                    </td>
+            
+                    <td>
+                        <input type="submit" name="action" class="btn btn-primary" value="Add" form="assign_form">
+                    </td>	
+                </form>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+       
+
+    <h2>View and Modify</h2>
+    <div class="table-responsive">
+        <table class="table table-dark table-striped">
+            <thead>
+                <tr>
+                    <th scope="col" style="width:2vw;">#</th>
+                    <th scope="col" class="text-center" style="width:22vw;">Asset Tag <br>(Location-Device Type-ID)</th>
+                    <th scope="col" style="width:14vw;">Assigned To</th>
+                    <th scope="col" style="width:8vw;">Date Bought</th>
+                    <th scope="col" style="width:8vw;">Date Decommissioned</th>
+                    <th scope="col" style="width:10vw;">Device Type</th>
+                    <th scope="col" style="width:10vw;">Operating System</th>
+                    <th scope="col" style="width:6vw;"></th>
+                    <th scope="col" style="width:6vw;"></th>
+                </tr>
+            </thead>
+    
+            <tbody>
+                <tr>
+                    <!--Table row start-->
+                    <% assignedAssetsTags.forEach(row => {%>
+                        <% //extract 3 components of an asset tag so that they can be individually changed %>
+                        <% let assetTagComponents = row.asset_tag.split('-');%>
+                        <% var formLabel = "update_form_" + row.assigmentID; %>
+
+                    <form class="validate" id="<%= formLabel %>" action="/" method="POST">
+                        <th scope="row"><%= row.assigmentID %></th>
+        
+                        <td>    
+                            <div class="input-group mb-3">
+                                <input type="text" name="tagLocation" value="<%= assetTagComponents[0] %>" class="form-control" placeholder="Location" aria-label="Location" form="<%= formLabel %>" required>
+                                    <span class="input-group-text">-</span>
+                                <input type="text" name="tagDeviceType" value="<%= assetTagComponents[1] %>" class="form-control" placeholder="Device Type" aria-label="Device Type" form="<%= formLabel %>" required>
+                                    <span class="input-group-text">-</span>
+                                <input type="text" name="tagID" value="<%= assetTagComponents[2] %>" class="form-control" placeholder="ID" aria-label="ID" form="<%= formLabel %>" required>
+                                <input type="hidden" name="assigmentID" value="<%= row.assigmentID %>">
+                            </div>
+                        </td>
+
+                        <td>    
+                        <% if(formSelectData.personSelect.length != 0){  %>
+                            <select name="person" class="form-select" aria-label="Assign to person" form="<%= formLabel %>" required>
+                        <%  formSelectData.personSelect.forEach(element => {  %>
+                                <option 
+                                    value="<%= element.personID %>" 
+                                    <% if(element.personID == row.personID){ %>
+                                        <%= 'selected' %>
+                                    <% } %>
+                                >
+                                    <%= element.full_name %>
+                                </option>
+                        <% }) %>
+                            </select>
+                        <% } %>
+                        </td>
+
+                        <td>
+                            <input name="dateBought" type="date" class="form-control" value="<%= row.date_bought %>" form="<%= formLabel %>" required>
+                        </td>
+                        <td>
+                            <input name="dateDecommissioned" type="date" class="form-control" value="<%= row.date_decommissioned %>" form="<%= formLabel %>">
+                        </td>
+
+                        <td>    
+                        <% if(formSelectData.deviceTypeSelect.length != 0){  %>
+                            <select name="deviceType" class="form-select" aria-label="Device Type" form="<%= formLabel %>" required>
+                                <option value="placeholder" hidden>Select Device</option>
+                        <%  formSelectData.deviceTypeSelect.forEach(element => {  %>
+                                <option 
+                                    value="<%= element.deviceID %>" 
+                                    <% if(element.deviceID == row.deviceID){ %>
+                                        <%= 'selected' %>
+                                    <% } %>
+                                >
+                                    <%= element.device_type %>
+                                </option>
+                        <% }) %>
+                            </select>
+                        <% } %>  
+                        </td>
+
+                        <td>    
+                        <% if(formSelectData.osTypeSelect.length != 0){  %>
+                            <select name="osType" class="form-select" aria-label="Operating System" form="<%= formLabel %>" required>
+                                <option value="placeholder" hidden>Select System</option>
+                        <%  formSelectData.osTypeSelect.forEach(element => {  %>
+                                <option 
+                                    value="<%= element.osID %>" 
+                                    <% if(element.osID == row.osID){ %>
+                                        <%= 'selected' %>
+                                    <% } %>
+                                >
+                                    <%= element.os_type %>
+                                </option>
+                        <% }) %>
+                            </select>
+                        <% } %>  
+                        </td>
+
+                        <td>
+                            <input type="submit" name="action" class="btn btn-primary"  value="Update" form="<%= formLabel %>">
+                        </td>	
+                        <td>
+                            <input type="submit" name="action" class="btn btn-danger" value="Delete" form="<%= formLabel %>">
+                        </td>
+                    </form>	
+                </tr>
+                <%   });  %>
+                <!--Table row end-->
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
