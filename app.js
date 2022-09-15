@@ -42,6 +42,16 @@ var getAssignedAssetTags = 'SELECT * FROM Assigned_asset_tags';
 
 
 app.get('/', (req, res) => {
+
+    //check if validation message from submiting a form was set
+    var valMsg;
+    var valType;
+
+    if(req.query.valMsg && req.query.valType){
+        valMsg = req.query.valMsg;
+        valType = req.query.valType;
+    }
+
     //async function needed for synchronous execution of queries
     async function getFormData(mysql){
         var connection = await mysql.createConnection(dbConfig);
@@ -70,7 +80,7 @@ app.get('/', (req, res) => {
 
         //end connection and show the index.html page
         await connection.end();
-        res.render('index' , {formSelectData: formSelectData, assignedAssetsTags: assignedAssetsTags});
+        res.render('index' , {formSelectData: formSelectData, assignedAssetsTags: assignedAssetsTags, valMsg: valMsg, valType: valType});
       }
     
       getFormData(mysql);
@@ -88,8 +98,10 @@ app.post('/', (req, res) => {
 
     for (const [key, value] of Object.entries(formData)){
         if(value == 'placeholder' || charSet.test(value)){
-            console.log('Action denied');
-            return res.redirect('/');
+
+            var message = encodeURIComponent('Database error');
+    
+            return res.redirect('/?valMsg=' + message + '&' + 'valType=error');
         }
     }
 

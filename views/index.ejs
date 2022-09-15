@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="FoxTeaHouse - Admin Panel">
 
-    <title>Document</title>
+    <title>Device Asset Register</title>
 
     <link rel="stylesheet" href="css/bootstrap.css">
 
@@ -39,6 +39,22 @@ This will preserve the format of asset tag that is made up of 3 components and w
 
     <h1>Device Asset Register</h1>
     <h2>Add New</h2>
+
+    <% if(valMsg && valType){ %>
+        <% switch(valType){ 
+            case 'success': %>
+            <div class="alert alert-success" role="alert">
+                <%= valMsg %>
+            </div>
+            <% break 
+          
+             case 'error': %>
+            <div class="alert alert-danger" role="alert">
+                <%= valMsg %>
+            </div>
+            <% break 
+         } %>
+    <% } %>
 
     <!--Change colour of the 'add new' table to other, like white? In order to distinguish to separate tables?-->
        

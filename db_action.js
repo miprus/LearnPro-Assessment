@@ -4,5 +4,8 @@ module.exports = async (mysql, dbConfig, sqlQuery, res) => {
   await connection.execute(sqlQuery);
   await connection.end();
 
-  res.redirect('/');
+  //set validation message
+  var message = encodeURIComponent('Database updated');
+
+  res.redirect('/?valMsg=' + message + '&' + 'valType=success');
 }
