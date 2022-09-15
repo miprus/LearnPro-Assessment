@@ -42,10 +42,10 @@ app.get('/', (req, res) => {
     async function getFormData(){
         const mysql = require('mysql2/promise');
         const connection = await mysql.createConnection({
-            host: "localhost",
-            user: "root",
-            password: "usbw",
-            database: "db_test"
+            host: "clwxydcjair55xn0.chr7pe7iynqr.eu-west-1.rds.amazonaws.com",
+            user: "weqcz7ybhjgjpkq5",
+            password: "dj2h23uuunx5zv2k",
+            database: "azpbmm9eebeqhok1"
           });
           
         var [rows, fields] = await connection.execute(getPeople);
@@ -107,10 +107,10 @@ app.post('/', (req, res) => {
             async function addData(){
                 const mysql = require('mysql2/promise');
                 const connection = await mysql.createConnection({
-                    host: "localhost",
-                    user: "root",
-                    password: "usbw",
-                    database: "db_test"
+                    host: "clwxydcjair55xn0.chr7pe7iynqr.eu-west-1.rds.amazonaws.com",
+                    user: "weqcz7ybhjgjpkq5",
+                    password: "dj2h23uuunx5zv2k",
+                    database: "azpbmm9eebeqhok1"
                   });
 
                                 //querry
@@ -131,10 +131,10 @@ app.post('/', (req, res) => {
             async function updateData(){
                 const mysql = require('mysql2/promise');
                 const connection = await mysql.createConnection({
-                    host: "localhost",
-                    user: "root",
-                    password: "usbw",
-                    database: "db_test"
+                    host: "clwxydcjair55xn0.chr7pe7iynqr.eu-west-1.rds.amazonaws.com",
+                    user: "weqcz7ybhjgjpkq5",
+                    password: "dj2h23uuunx5zv2k",
+                    database: "azpbmm9eebeqhok1"
                   });
 
                                 //querry
@@ -164,10 +164,10 @@ app.post('/', (req, res) => {
             async function deleteData(){
                 const mysql = require('mysql2/promise');
                 const connection = await mysql.createConnection({
-                    host: "localhost",
-                    user: "root",
-                    password: "usbw",
-                    database: "db_test"
+                    host: "clwxydcjair55xn0.chr7pe7iynqr.eu-west-1.rds.amazonaws.com",
+                    user: "weqcz7ybhjgjpkq5",
+                    password: "dj2h23uuunx5zv2k",
+                    database: "azpbmm9eebeqhok1"
                   });
 
          
